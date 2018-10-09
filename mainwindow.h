@@ -31,9 +31,7 @@ signals:
 public slots:
 
 private slots:
-    void on_sel_all_toggled(bool checked);
-
-    void on_sel_music_toggled(bool checked);
+    void onSelToggled(bool checked);
 
 private:
 

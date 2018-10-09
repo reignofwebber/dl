@@ -88,6 +88,16 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="sel_link">
+        <property name="text">
+         <string>link</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="sel_all">
         <property name="text">
          <string>all</string>
@@ -114,5 +124,105 @@
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>sel_all</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onSelToggled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>697</x>
+     <y>562</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>697</x>
+     <y>570</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sel_music</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onSelToggled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>527</x>
+     <y>569</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>592</x>
+     <y>575</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sel_txt</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onSelToggled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>396</x>
+     <y>569</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>411</x>
+     <y>572</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sel_video</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onSelToggled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>265</x>
+     <y>569</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>276</x>
+     <y>571</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sel_img</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onSelToggled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>111</x>
+     <y>562</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>110</x>
+     <y>570</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sel_link</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onSelToggled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>621</x>
+     <y>555</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>572</x>
+     <y>579</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>onSelToggled(bool)</slot>
+ </slots>
 </ui>

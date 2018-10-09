@@ -92,40 +92,67 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 }
 
-void MainWindow::on_sel_all_toggled(bool checked)
-{
-    if(checked)
-        this->urlList->selectAll();
-    else
-    {
-        QStandardItemModel *model = dynamic_cast<QStandardItemModel *>(this->urlList->model());
-        for(int r = 0; r < model->rowCount(); ++r)
-        {
-            QModelIndex index = model->index(r, 0);
-            QStandardItem *item = model->itemFromIndex(index);
-            item->setCheckState(Qt::Unchecked);
-        }
-    }
-}
+//void MainWindow::on_sel_all_toggled(bool checked)
+//{
+//    if(checked)
+//        this->urlList->selectAll();
+//    else
+//    {
+//        QStandardItemModel *model = dynamic_cast<QStandardItemModel *>(this->urlList->model());
+//        for(int r = 0; r < model->rowCount(); ++r)
+//        {
+//            QModelIndex index = model->index(r, 0);
+//            QStandardItem *item = model->itemFromIndex(index);
+//            item->setCheckState(Qt::Unchecked);
+//        }
+//    }
+//}
 
-void MainWindow::on_sel_music_toggled(bool checked)
+void MainWindow::onSelToggled(bool checked)
 {
+    qDebug() << checked;
+    QPushButton *btn = qobject_cast<QPushButton *>(sender());
+
     QStandardItemModel *model = dynamic_cast<QStandardItemModel *>(this->urlList->model());
     for(int r = 0; r < model->rowCount(); ++r)
     {
         QModelIndex index = model->index(r, 0);
         QStandardItem *item = model->itemFromIndex(index);
         Type t = qvariant_cast<Type>(item->data());
-        if(t == MUSIC)
+        QItemSelectionModel *selModel = this->urlList->selectionModel();
+
+        QString s = btn->text();
+
+        if(btn->text() == "all")
         {
-            if(checked)
-            {
-                item->setCheckState(Qt::Checked);
-            }
-            else
-            {
-                item->setCheckState(Qt::Unchecked);
-            }
+            selModel->select(QItemSelection(index, index), checked ? QItemSelectionModel::Select : QItemSelectionModel::Deselect);
+            this->sel_link->setChecked(checked);
+            this->sel_txt->setChecked(checked);
+            this->sel_img->setChecked(checked);
+            this->sel_music->setChecked(checked);
+            this->sel_video->setChecked(checked);
         }
+        else if(btn->text() == "link" && t == LINK)
+        {
+            selModel->select(QItemSelection(index, index), checked ? QItemSelectionModel::Select : QItemSelectionModel::Deselect);
+        }
+        else if(btn->text() == "text" && t == TEXT)
+        {
+            selModel->select(QItemSelection(index, index), checked ? QItemSelectionModel::Select : QItemSelectionModel::Deselect);
+        }
+        else if(btn->text() == "music" && t == MUSIC)
+        {
+            selModel->select(QItemSelection(index, index), checked ? QItemSelectionModel::Select : QItemSelectionModel::Deselect);
+        }
+        else if(btn->text() == "video" && t == VIDEO)
+        {
+            selModel->select(QItemSelection(index, index), checked ? QItemSelectionModel::Select : QItemSelectionModel::Deselect);
+        }
+        else if(btn->text() == "image" && t == IMAGE)
+        {
+            selModel->select(QItemSelection(index, index), checked ? QItemSelectionModel::Select : QItemSelectionModel::Deselect);
+        }
+
     }
+
 }
