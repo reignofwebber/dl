@@ -84,7 +84,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         {
             auto item = new QStandardItem(QIcon(":/images/music.png"), s);
             item->setCheckable(true);
-            item->setData(15);
+            item->setData(MUSIC);
             model->appendRow(item);
         }
     });
@@ -92,28 +92,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 }
 
-//void MainWindow::on_sel_all_toggled(bool checked)
-//{
-//    if(checked)
-//        this->urlList->selectAll();
-//    else
-//    {
-//        QStandardItemModel *model = dynamic_cast<QStandardItemModel *>(this->urlList->model());
-//        for(int r = 0; r < model->rowCount(); ++r)
-//        {
-//            QModelIndex index = model->index(r, 0);
-//            QStandardItem *item = model->itemFromIndex(index);
-//            item->setCheckState(Qt::Unchecked);
-//        }
-//    }
-//}
-
 void MainWindow::onSelToggled(bool checked)
 {
-    qDebug() << checked;
     QPushButton *btn = qobject_cast<QPushButton *>(sender());
 
     QStandardItemModel *model = dynamic_cast<QStandardItemModel *>(this->urlList->model());
+    qDebug() << model->rowCount();
     for(int r = 0; r < model->rowCount(); ++r)
     {
         QModelIndex index = model->index(r, 0);
@@ -152,7 +136,6 @@ void MainWindow::onSelToggled(bool checked)
         {
             selModel->select(QItemSelection(index, index), checked ? QItemSelectionModel::Select : QItemSelectionModel::Deselect);
         }
-
     }
 
 }
