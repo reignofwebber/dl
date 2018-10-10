@@ -1,4 +1,5 @@
 ﻿#include "htmlparser.h"
+#include <iostream>
 
 void HtmlParser::streamParse(const std::string & buffer)
 {
@@ -27,17 +28,19 @@ void HtmlParser::pushChar(char ch)
 		parse_tag_dq.clear();
 	case '>':
 		// tag
-		assert(parse_tag_dq.empty());
-		parseTag(std::string{parse_tag_dq.begin(), parse_tag_dq.end()});
-
+		parseTag(parse_tag_dq.begin(), parse_tag_dq.end());
+		parse_tag_dq.clear();
 	default:
 		parse_tag_dq.push_back(ch);
 		break;
 	}
 }
 
-void HtmlParser::parseTag(const std::string &tagString)
+template <typename ChIter>
+void HtmlParser::parseTag(ChIter begin, ChIter end)
 {
-	std::istringstream iss(tagString);
-	std::vector<std::string> results(std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>());
+	for (auto itr = begin; itr != end; ++itr)
+	{
+		char c = *itr;
+	}
 }

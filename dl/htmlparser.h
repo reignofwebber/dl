@@ -15,7 +15,10 @@
 class tag
 {
 public:
-	tag();
+	tag(const std::string &name)
+		: name(name)
+	{
+	}
 
 	void setContent(const std::string &content)
 	{
@@ -55,6 +58,7 @@ public:
 private:
 	tag *parent;
 	std::set<tag *> children;
+	std::string name;
 	std::string content;
 	std::unordered_map<std::string, std::string> attrs;
 };
@@ -72,8 +76,10 @@ public:
 
 private:
 	void pushChar(char ch);
+	
+	template <typename ChIter>
+	void parseTag(ChIter begin, ChIter end);
 
-	void parseTag(const std::string &tagString);
 
 private:
 	// parse tag

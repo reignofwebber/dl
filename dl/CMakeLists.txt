@@ -3,6 +3,7 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
+project(dl)
 # Add source to this project's executable.
 find_package(CURL)
 
