@@ -20,6 +20,6 @@ add_executable (dl ${dl_SRC})
 target_include_directories(dl PRIVATE ${CURL_INCLUDE_DIRS})
 target_link_libraries(dl PRIVATE ${CURL_LIBRARIES})
 
-
+add_library(html htmlparser.cpp htmlparser.h)
 
 # TODO: Add tests and install targets if needed.

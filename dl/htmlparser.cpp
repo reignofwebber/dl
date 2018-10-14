@@ -1,53 +1,75 @@
 ﻿#include "htmlparser.h"
 #include <iostream>
 #include <vector>
+#include <fstream>
 
-HtmlParser::HtmlParser()
-  : root(0)
+Html::Html()
+  : root_(0), has_error_(false)
 {
 
 }
 
-
-void HtmlParser::streamParse(const std::string & buffer)
+bool Html::parseHtml(const std::string &filename)
 {
-
+  std::ifstream in(filename);
+  if(!in.is_open()){
+    std::cout << "Cannot open file " << filename << std::endl;
+    return false;
+  }
+  char ch;
+  in >> std::noskipws;
+  while(in >> ch && !has_error_){
+    std::cout << ch;
+    pushChar(ch);
+  }
+  return true;
 }
 
-void HtmlParser::streamParse(const char * ptr, size_t size)
+bool Html::parse(const std::string & buffer)
+{
+  for(auto itr = buffer.begin(); itr != buffer.end() && !has_error_; ++itr){
+    pushChar(*itr);
+  }
+  return true;
+}
+
+bool Html::parse(const char * ptr, size_t size)
 {
 	auto pointer = ptr;
 	size_t read_count = 0;
 
-	while (read_count < size)
+	while (read_count < size && !has_error_)
 	{
 		pushChar(*pointer++);
 		++read_count;
 	}
+    return true;
 }
 
-void HtmlParser::pushChar(char ch)
+void Html::pushChar(char ch)
 {
 	switch (ch)
 	{
 	case '<':
 		// content
-      if(!tag_stk.empty()){
-        tag_stk.top()->addContent(std::string(parse_tag_dq.begin(), parse_tag_dq.end()));
+      if(!tag_stk_.empty()){
+        tag_stk_.top()->addContent(std::string(parse_tag_dq_.begin(), parse_tag_dq_.end()));
       }
-	  parse_tag_dq.clear();
+	  parse_tag_dq_.clear();
+      break;
 	case '>':
 		// tag
-		parseTag(parse_tag_dq.begin(), parse_tag_dq.end());
-		parse_tag_dq.clear();
+		parseTag(parse_tag_dq_.begin(), parse_tag_dq_.end());
+		parse_tag_dq_.clear();
+        break;
 	default:
-		parse_tag_dq.push_back(ch);
+		parse_tag_dq_.push_back(ch);
 		break;
 	}
 }
 
 template <typename ChIter>
-void HtmlParser::parseTag(ChIter begin, ChIter end)
+void Html::parseTag(ChIter begin, ChIter end)
 {
   bool is_tag_end = false;
   auto itr = begin;
@@ -68,6 +90,7 @@ void HtmlParser::parseTag(ChIter begin, ChIter end)
 
     name.push_back(*itr);
   }
+
   tag->setName(name);
   name.clear();
 
@@ -80,9 +103,11 @@ void HtmlParser::parseTag(ChIter begin, ChIter end)
       if(name != ""){
         if(!is_value){
           cur_name = name;
+          name.clear();
         }else{
           assert(cur_name != "");
           (*tag)[cur_name].push_back(name);
+          name.clear();
         }
       }
       continue;
@@ -90,7 +115,12 @@ void HtmlParser::parseTag(ChIter begin, ChIter end)
     if(*itr == '"'){
       ++quote_cnt;
       if(quote_cnt % 2) is_value = true;
-      else is_value = false;
+      else{
+        assert(cur_name != "");
+        (*tag)[cur_name].push_back(name);
+        name.clear();
+        is_value = false;
+      }
       continue;
     }
 
@@ -98,21 +128,25 @@ void HtmlParser::parseTag(ChIter begin, ChIter end)
   }
   if(is_tag_end){
     while(true){
-      assert(!tag_stk.empty());
-      if(tag_stk.top()->getName() == tag->getName()){
-        tag_stk.pop();
+      //     assert(!tag_stk_.empty());
+      if(tag_stk_.empty()){
+        has_error_ = true;
+        return;
+      }
+      if(tag_stk_.top()->name() == tag->name()){
+        tag_stk_.pop();
         break;
       }else{
-        tag_stk.pop();
+        tag_stk_.pop();
       }
     }
   }else{
-    if(!tag_stk.empty()){
-      tag_stk.top()->addChild(tag);
-      tag->setParent(tag_stk.top());
+    if(!tag_stk_.empty()){
+      tag_stk_.top()->addChild(tag);
+      tag->setParent(tag_stk_.top());
     }else{
-      root = tag;
+      root_ = tag;
     }
-    tag_stk.push(tag);
+    tag_stk_.push(tag);
   }
 }

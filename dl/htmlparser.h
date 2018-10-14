@@ -17,79 +17,91 @@ class Tag
 {
 public:
   Tag()
-    : parent(0)
+    : parent_(0)
   {
 
   }
 
 	Tag(const std::string &name)
-      : name(name), parent(0)
+      : name_(name), parent_(0)
 	{
 	}
 
   void setName(const std::string &name)
   {
-    this->name = name;
+    name_ = name;
   }
 
-  std::string getName() const
+  std::string name() const
   {
-    return name;
+    return name_;
   }
 
 	void addContent(const std::string &content)
 	{
-		this->content += content;
+		content_ += content;
 	}
 
-	std::string getContent() const
+	std::string content() const
 	{
-		return content;
+		return content_;
 	}
 
-	void setParent(Tag *ptag)
+	void setParent(Tag *parent)
 	{
-		parent = ptag;
+		parent_ = parent;
 	}
 
-	Tag * getParent() const
+	Tag * parent() const
 	{
-		return parent;
+		return parent_;
 	}
 
 	void addChild(Tag *child)
 	{
-		children.insert(child);
+		children_.insert(child);
 	}
 
-	std::set<Tag *> getChildren()
+	std::set<Tag *> children()
 	{
-		return children;
+		return children_;
 	}
 
 	std::vector<std::string>& operator[](const std::string &attr)
 	{
-		return attrs[attr];
+		return attrs_[attr];
 	}
 
+    bool has_attr(const std::string &attr)
+    {
+      return attrs_.find(attr) != attrs_.end();
+    }
+
 private:
-	Tag *parent;
-	std::set<Tag *> children;
-	std::string name;
-	std::string content;
-	std::unordered_map<std::string, std::vector<std::string>> attrs;
+	Tag *parent_;
+	std::set<Tag *> children_;
+	std::string name_;
+	std::string content_;
+	std::unordered_map<std::string, std::vector<std::string>> attrs_;
 };
 
 
 
-class HtmlParser
+class Html
 {
 public:
-	HtmlParser();
+	Html();
 
-	void streamParse(const std::string &buffer);
+    bool parseHtml(const std::string &filename);
 
-	void streamParse(const char *ptr, size_t size);
+	bool parse(const std::string &buffer);
+
+	bool parse(const char *ptr, size_t size);
+
+    Tag *root(){return root_;}
+
+    bool hasError(){return has_error_;}
+
 
 private:
 	void pushChar(char ch);
@@ -100,10 +112,12 @@ private:
 
 private:
 	// parse tag
-	std::deque<char> parse_tag_dq;
+	std::deque<char> parse_tag_dq_;
 	// tag
-	std::stack<Tag *> tag_stk;
+	std::stack<Tag *> tag_stk_;
     // tag tree head
-    Tag *root;
+    Tag *root_;
 
+    // has error;
+    bool has_error_;
 };

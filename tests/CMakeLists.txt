@@ -6,7 +6,7 @@ cmake_minimum_required (VERSION 3.8)
 project (tests)
 
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/dl)
 
 file(GLOB TEST_SRCS RELATIVE ${CMAKE_CURRENT_LIST_DIR} *.cpp)
 
@@ -17,7 +17,7 @@ foreach(testSrc ${TEST_SRCS})
 
 	add_executable(${testName} ${testSrc})
 
-	target_link_libraries(${testName} ${Boost_LIBRARIES})
+	target_link_libraries(${testName} ${Boost_LIBRARIES} html)
 
 #	set_target_properties(${testName} 
 # 	     PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/testBin)
