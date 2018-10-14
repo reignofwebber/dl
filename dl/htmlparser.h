@@ -4,6 +4,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <stack>
 #include <deque>
 #include <unordered_map>
@@ -12,17 +13,33 @@
 #include <sstream>
 #include <iterator>
 
-class tag
+class Tag
 {
 public:
-	tag(const std::string &name)
-		: name(name)
+  Tag()
+    : parent(0)
+  {
+
+  }
+
+	Tag(const std::string &name)
+      : name(name), parent(0)
 	{
 	}
 
-	void setContent(const std::string &content)
+  void setName(const std::string &name)
+  {
+    this->name = name;
+  }
+
+  std::string getName() const
+  {
+    return name;
+  }
+
+	void addContent(const std::string &content)
 	{
-		this->content = content;
+		this->content += content;
 	}
 
 	std::string getContent() const
@@ -30,37 +47,37 @@ public:
 		return content;
 	}
 
-	void setParent(tag *ptag)
+	void setParent(Tag *ptag)
 	{
 		parent = ptag;
 	}
 
-	tag * getParent() const
+	Tag * getParent() const
 	{
 		return parent;
 	}
 
-	void addChild(tag *child)
+	void addChild(Tag *child)
 	{
 		children.insert(child);
 	}
 
-	std::set<tag *> getChildren()
+	std::set<Tag *> getChildren()
 	{
 		return children;
 	}
 
-	std::string& operator[](const std::string &attr)
+	std::vector<std::string>& operator[](const std::string &attr)
 	{
 		return attrs[attr];
 	}
 
 private:
-	tag *parent;
-	std::set<tag *> children;
+	Tag *parent;
+	std::set<Tag *> children;
 	std::string name;
 	std::string content;
-	std::unordered_map<std::string, std::string> attrs;
+	std::unordered_map<std::string, std::vector<std::string>> attrs;
 };
 
 
@@ -76,7 +93,7 @@ public:
 
 private:
 	void pushChar(char ch);
-	
+
 	template <typename ChIter>
 	void parseTag(ChIter begin, ChIter end);
 
@@ -85,5 +102,8 @@ private:
 	// parse tag
 	std::deque<char> parse_tag_dq;
 	// tag
-	std::stack<tag *> tag_stk;
+	std::stack<Tag *> tag_stk;
+    // tag tree head
+    Tag *root;
+
 };

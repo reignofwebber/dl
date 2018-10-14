@@ -140,7 +140,7 @@ bool DL::fast_download(const std::string & url, const std::string & fileName)
 
 std::string DL::get_content(const std::string & url)
 {
-	if (!m_curl) return false;
+	if (!m_curl) return "";
 
 	CURLcode res;
 	std::string buffer;
